@@ -1,6 +1,8 @@
 import webapp2
 import cgi
 import re
+from google.appengine.api import app_identity
+
 helloadr = "/hello"
 rot13adr = "/rot13"
 
@@ -9,6 +11,8 @@ mainpaige = """
 <a href="%(rot13)s">Rot 13</a> <br>
 """%{"hello":helloadr, "rot13":rot13adr}
 
+backlinkstring ='<br> <a href="http://%s">back</a>'%app_identity.get_default_version_hostname()
+
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
@@ -16,8 +20,8 @@ class MainPage(webapp2.RequestHandler):
 
 class HelloPage(webapp2.RequestHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Hello, World!')
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write('Hello, World!' + backlinkstring)
 
 form = """
 <form method="post">
@@ -35,10 +39,10 @@ pattern = re.compile("|".join(rep.keys()))
 
 class Rot13Page(webapp2.RequestHandler):
     def escape13(self,s):
-        return pattern.sub(lambda m: rep[re.escape(m.group(0))], s)
+        return pattern.sub(lambda m: rep[re.escape(m.group(0))], s) 
     def write_form(self,s):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(form%s)
+        self.response.write((form%s) + (backlinkstring))
     def get(self):
         self.write_form("")
     def post(self):
