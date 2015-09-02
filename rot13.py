@@ -1,7 +1,7 @@
 import webapp2
 import cgi
 import re
-from head import backlinkstring
+from head import backLinkString
 
 
 form = """
@@ -23,7 +23,7 @@ class Rot13Page(webapp2.RequestHandler):
         return pattern.sub(lambda m: rep[re.escape(m.group(0))], s) 
     def write_form(self,s):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write((form%s) + (backlinkstring))
+        self.response.write((form%s) + (backLinkString))
     def get(self):
         self.write_form("")
     def post(self):
