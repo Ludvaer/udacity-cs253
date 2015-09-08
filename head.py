@@ -32,7 +32,7 @@ page = """
     body {
         font-family: sans-serif; width: 800px; margin: 0 auto; padding: 10px;
     }
-    error {
+    .error {
         color: red;
     }
     label {
