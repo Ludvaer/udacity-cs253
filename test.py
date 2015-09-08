@@ -1,19 +1,17 @@
 import webapp2
-from head import helloAdr
-from head import rot13adr
-from head import signUpAdr
-from head import welcomeAdr
+from head import adr
 
-from indexPage import MainPage
-from helloWorld import HelloPage
+from main import MainPage
+from hello import HelloPage
 from rot13 import Rot13Page
 from signUp import SignUpPage
 from welcome import WelcomePage
+from blog import BlogPage
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    (helloAdr, HelloPage),
-    (rot13adr, Rot13Page),
-    (signUpAdr, SignUpPage),
-    (welcomeAdr, WelcomePage),
+app = webapp2.WSGIApplication([    
+    (adr['hello'], HelloPage),
+    (adr['rot13'], Rot13Page),
+    (adr['signUp'], SignUpPage),
+    (adr['welcome'], WelcomePage),
+    (adr['blog'], BlogPage),
 ], debug=True)

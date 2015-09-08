@@ -1,8 +1,10 @@
 import webapp2
 import cgi
 import re
-from head import backLinkString
+from head import adr
+from head import fold
 
+title = "Rot13"
 
 form = """
 <form method="post">
@@ -23,7 +25,7 @@ class Rot13Page(webapp2.RequestHandler):
         return pattern.sub(lambda m: rep[re.escape(m.group(0))], s) 
     def write_form(self,s):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write((form%s) + (backLinkString))
+        self.response.write(fold(form%s,title))
     def get(self):
         self.write_form("")
     def post(self):
@@ -31,3 +33,7 @@ class Rot13Page(webapp2.RequestHandler):
         text = self.escape13(text)
         text = cgi.escape(text, quote = True);
         self.write_form(text)
+
+app = webapp2.WSGIApplication([    
+    (adr['rot13'], Rot13Page),
+], debug=True)

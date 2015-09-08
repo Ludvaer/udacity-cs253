@@ -1,25 +1,32 @@
 import webapp2
 import cgi
 import re
+from welcome import WelcomePage
 from head import fold
-from head import welcomeAdr
+from head import adr
+from head import projectName
 
+title = "Sign Up stub page "
 
 form = """
 <form method="post">
-<label><h>Sign Up</h></label>
-<input type=input name="username" value="%(name)s">
-<label style="color:red" >%(nameerr)s</label><br>
-<label>Password</label>
-<input type=password name="password" >
-<label style="color:red" >%(pswerr)s</label><br>
-<label>Verify password</label>
-<input type=password name="verify" >
-<label style="color:red" >%(vererr)s</label><br>
-<label>E mail</label>
-<input type=input name="email" value="%(mail)s">
-<label style="color:red" >%(mailerr)s</label><br>
-<input type=submit value="Sign Up">
+ <label><h>Sign Up</h></label>
+ <input type=input name="username" value="%(name)s">
+ <label class="error">%(nameerr)s</label><br>
+
+ <label>Password</label>
+ <input type=password name="password" >
+ <label class="error">%(pswerr)s</label><br>
+
+ <label>Verify password</label>
+ <input type=password name="verify" >
+ <label class="error">%(vererr)s</label><br>
+
+ <label>E mail</label>
+ <input type=input name="email" value="%(mail)s">
+ <label class="error">%(mailerr)s</label><br>
+
+ <input type=submit value="Sign Up">
 </form>
 """
 
@@ -37,7 +44,7 @@ class SignUpPage(webapp2.RequestHandler):
         return MAIL_RE.match(mail)
     def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(fold(form%{"name":name, "mail":mail, "nameerr":nameerr, "pswerr":pswerr, "vererr":vererr, "mailerr":mailerr}))
+        self.response.write(fold(form%{"name":name, "mail":mail, "nameerr":nameerr, "pswerr":pswerr, "vererr":vererr, "mailerr":mailerr},title))
     def get(self):
         self.write_form()
     def post(self):
@@ -64,8 +71,14 @@ class SignUpPage(webapp2.RequestHandler):
             mailerr = "Invalid mail."
         
         if(nameerr == "" and pswerr=="" and vererr=="" and mailerr==""):
-            self.redirect(welcomeAdr + "?username=" + username)
+            self.redirect(adr['welcome'] + "?username=" + username)
         else:
             username = cgi.escape(username, quote = True)            
             email = cgi.escape(email, quote = True)
             self.write_form(username,email,nameerr,pswerr,vererr,mailerr)
+
+
+app = webapp2.WSGIApplication([    
+    (adr['signUp'], SignUpPage),
+    (adr['welcome'], WelcomePage),
+], debug=True)

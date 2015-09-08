@@ -3,7 +3,30 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
+libraries:
+- name: jinja2
+  version: latest
 
 handlers:
-- url: /.*
-  script: test.app
+- url: /
+  script: main.app
+
+- url: /hello.*
+  script: hello.app
+
+- url: /rot13.*
+  script: rot13.app
+
+- url: /signup.*
+  script: signUp.app
+
+- url: /blog.*
+  script: blog.app
+
+
+
+
+
+
+
+
