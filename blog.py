@@ -32,7 +32,7 @@ page = """
     <div>
     {% for post in posts %}
     <div class="post">
-        <div class="post-subject"><a href = "{{blog}}/{{post.key().id()}}">{{post.subject|e}}<a></div>
+        <div class="post-subject"><a href = "{{blog}}/{{post.key().id()}}">{{post.subject|e}}</a></div>
         <pre class="post-content">{{post.content|e}}</pre>
     </div>
     </div>
