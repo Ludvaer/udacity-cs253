@@ -32,7 +32,7 @@ page = """
     <div>
     {% for post in posts %}
     <div class="post">
-        <div class="post-subject">{{post.subject|e}}</div>
+        <div class="post-subject"><a href = "{{blog}}/{{post.key().id()}}">{{post.subject|e}}<a></div>
         <pre class="post-content">{{post.content|e}}</pre>
     </div>
     </div>
@@ -41,6 +41,7 @@ page = """
 template = Template(page);
 
 class Post(db.Model):
+     
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
@@ -58,7 +59,7 @@ class BlogPage(webapp2.RequestHandler):
         c = template.render(params)
         self.response.write(bfold(c,noHomeLink = True))
     def render(self, **params):
-        self.write(blogpost = adr['blogpost'],**params)
+        self.write(blogpost = adr['blogpost'],blog = adr['blog'],**params)
     def get(self):
         posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC LIMIT 13")     
         self.render(posts = posts);
