@@ -35,8 +35,8 @@ page = """
         <div class="post-subject"><a href = "{{blog}}/{{post.key().id()}}">{{post.subject|e}}</a></div>
         <pre class="post-content">{{post.content|e}}</pre>
     </div>
-    </div>
     {% endfor %}
+    </div>
 """
 template = Template(page);
 
