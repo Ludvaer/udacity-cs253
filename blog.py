@@ -14,10 +14,10 @@ btitle = "Blog"
 bhomeLinkString = '<br> <a href="%s">Blog home page</a> <br>'%adr['blog']
 
 bpage = """
-<h1>Lurr CS 253 Blog</h1><br>
+<a href="%(blog)s" class="main-title">Lurr CS 253 Blog</a><br>
 {{content}}
 {{bhomeLink}}
-"""
+"""%adr
 
 btemplate = Template(bpage)
 
@@ -28,12 +28,14 @@ def bfold(content, title = "", noHomeLink = False):
 page = """
 <a href=" {{blogpost}} ">[add post]</a> <br>
 <br>
-    {{test}}
     <div>
     {% for post in posts %}
     <div class="post">
-        <div class="post-subject"><a href = "{{blog}}/{{post.key().id()}}">{{post.subject|e}}</a></div>
-        <pre class="post-content">{{post.content|e}}</pre>
+        <div class="post-header">
+            <a href = "{{blog}}/{{post.key().id()}}" class="post-subject"> {{post.subject|e}} </a>
+            <span class="post-date">{{post.created|e}}</span>
+        </div>
+        <div class="post-content">{{post.content|e}}</div>
     </div>
     {% endfor %}
     </div>
@@ -73,7 +75,7 @@ class BlogPostPage(BlogPage):
         pid = self.request.path.split('/')[-1] 
 
         posts = db.GqlQuery("SELECT * FROM Post WHERE __key__ = KEY('Post',%s)"%pid)     
-        self.render(test = posts,posts = posts );    
+        self.render(posts = posts);    
         
 
 from blogpost import PostPage

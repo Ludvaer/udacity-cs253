@@ -30,7 +30,10 @@ page = """
       <title>{{title|e}}</title>
       <style type="text/css">
     body {
-        font-family: sans-serif; width: 800px; margin: 0 auto; padding: 10px;
+        font-family: Helvetica, Arial, sans-serif;
+        width: 800px;
+        margin: 0 auto;
+        padding: 10px;
     }
     .error {
         color: red;
@@ -38,27 +41,55 @@ page = """
     label {
         display: block; font-size: 20px;
     }
+    label + label {
+        margin-top: 20px;
+    }
     input[type=text] {
-        width: 400px; font-size: 20px; padding: 2px;
+        width: 500px; font-size: 20px; padding: 2px; font-family: monospace;
     }
     textarea {
-        width: 400px; height: 200px; font-size: 17px; font-family: monospace;
+        width: 500px; height: 200px; font-size: 17px; font-family: monospace;
     }
     input[type=submit] {
         font-size: 24px;
     }
-    hr {
-        margin: 20px auto;
+    
+    .main-title {
+color: #111;
+display: block;
+font-size: 40px;
+font-weight: bold;
+text-align: center;
+margin-bottom: 30px;
+border-bottom: 2px solid #eee;
+text-decoration: none;
     }
 
+
     .post {
-        margin-top: 20px;
+        margin-bottom: 20px;
+        width:100%;        
+    }
+    .post-header {
+        position:relative;
+        border-bottom: 1px dotted #ccc;
     }
     .post-subject {
-        font-weight: bold; font-size: 20px;
+        font-weight: bold;
+        font-size: 20px; 
+        text-decoration: none;
+    }
+    .post-date {
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        font-size: 15px;
+        color: #aaa;
     }
     .post-content {
-        margin: 0; font-size: 17px;
+        word-wrap: break-word;
+        margin: 0; 
+        font-size: 17px; 
     }
       </style>
   <head>
