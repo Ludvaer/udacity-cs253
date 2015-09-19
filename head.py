@@ -53,8 +53,9 @@ page = """
     }
     form { 
         margin:auto;
-        width:30em;
+        max-width:30em;
         padding: 2%;
+        box-sizing: border-box;
     }
     input {
         font-size: 17px;
