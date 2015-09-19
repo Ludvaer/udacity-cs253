@@ -30,10 +30,12 @@ page = """
       <title>{{title|e}}</title>
       <style type="text/css">
     body {
+        background: #ddd;
         font-family: Helvetica, Arial, sans-serif;
-        width: 800px;
-        margin: 0 auto;
-        padding: 10px;
+        max-width: 50em;
+        padding: 2%;
+        margin: auto;
+        font-size: 20px;
     }
     .error {
         color: red;
@@ -44,52 +46,80 @@ page = """
     label + label {
         margin-top: 20px;
     }
-    input[type=text] {
-        width: 500px; font-size: 20px; padding: 2px; font-family: monospace;
+    form { 
+        margin:auto;
+        width:30em;
+        padding: 2%;
+    }
+    input {
+        font-size: 17px;
+        padding: 0.3em;
+        font-family: monospace;
+        width:100%;
+        box-sizing: border-box;
     }
     textarea {
-        width: 500px; height: 200px; font-size: 17px; font-family: monospace;
+        font-size: 17px;
+        padding: 0.3em;
+        height: 40em;
+        font-family: monospace;
+        width:100%;
+        box-sizing: border-box;
     }
     input[type=submit] {
+        width:auto;
         font-size: 24px;
+        font-family: Helvetica, Arial, sans-serif;
+        padding: 0.3em;
+    }
+    li {
+        margin: 1em
     }
     
     .main-title {
-color: #111;
-display: block;
-font-size: 40px;
-font-weight: bold;
-text-align: center;
-margin-bottom: 30px;
-border-bottom: 2px solid #eee;
-text-decoration: none;
+        color: #111;
+        display: block;
+        font-size: 40px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #ccc;
+        text-decoration: none;
     }
 
 
-    .post {
-        margin-bottom: 20px;
-        width:100%;        
+    .post {        
+        margin: 1em;
+        background: #eee;
+        width: auto; 
+        border: 1px solid #ccc       
     }
     .post-header {
         position:relative;
         border-bottom: 1px dotted #ccc;
+        background: #f7f7f7;
+        padding: 1em;
+        padding-bottom: 0.5em;
     }
     .post-subject {
+        color: #222;
         font-weight: bold;
         font-size: 20px; 
         text-decoration: none;
     }
     .post-date {
         position: absolute;
-        right: 0px;
-        bottom: 0px;
+        right: 1em;
+        bottom: 0.75em;
         font-size: 15px;
         color: #aaa;
     }
-    .post-content {
+    .post-content {        
+        white-space: pre-wrap;
         word-wrap: break-word;
-        margin: 0; 
         font-size: 17px; 
+        padding: 1em;
+        padding-top: 0.5em;
     }
       </style>
   <head>

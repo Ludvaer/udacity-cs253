@@ -31,10 +31,15 @@ page = """
     <div>
     {% for post in posts %}
     <div class="post">
-        <div class="post-header">
+        <div class="post-header" onclick="fclick{{post.key().id()}}()" >
             <a href = "{{blog}}/{{post.key().id()}}" class="post-subject"> {{post.subject|e}} </a>
-            <span class="post-date">{{post.created|e}}</span>
+            <span class="post-date">{{post.created.strftime("%d %b %Y")|e}}</span>
         </div>
+        <script>
+            function fclick{{post.key().id()}}() {
+                window.location.href = "{{blog}}/{{post.key().id()}}";
+            }
+        </script>
         <div class="post-content">{{post.content|e}}</div>
     </div>
     {% endfor %}

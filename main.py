@@ -4,10 +4,12 @@ from head import fold
 from head import projectName
 
 mainpaige = """
-<a href="%(hello)s">Hello, World</a> <br>
-<a href="%(rot13)s">Rot 13</a> <br>
-<a href="%(signUp)s">Sign Up</a> <br>
-<a href="%(blog)s">Blog</a> <br>
+<ul>
+<li><a href="%(hello)s">Hello, World</a> <br></li>
+<li><a href="%(rot13)s">Rot 13</a> <br></li>
+<li><a href="%(signUp)s">Sign Up</a> <br></li>
+<li><a href="%(blog)s">Blog</a> <br></li>
+</ul>
 """%adr
 
 
