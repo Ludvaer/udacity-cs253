@@ -9,8 +9,9 @@ from head import projectName
 title = "Sign Up stub page "
 
 form = """
+ <label><h1>Sign Up</h1></label>
 <form method="post">
- <label><h>Sign Up</h></label>
+ <label>Name</label>
  <input type=input name="username" value="%(name)s">
  <label class="error">%(nameerr)s</label><br>
 

@@ -14,7 +14,7 @@ btitle = "Blog"
 bhomeLinkString = '<br> <a href="%s">Blog home page</a> <br>'%adr['blog']
 
 bpage = """
-<a href="%(blog)s" class="main-title">Lurr CS 253 Blog</a><br>
+<a href="%(blog)s" class="main-title">Lurr CS 253 Blog</a>
 {{content}}
 {{bhomeLink}}
 """%adr
@@ -26,8 +26,7 @@ def bfold(content, title = "", noHomeLink = False):
 
 
 page = """
-<a href=" {{blogpost}} ">[add post]</a> <br>
-<br>
+<a href=" {{blogpost}} ">[add post]</a>
     <div>
     {% for post in posts %}
     <div class="post">

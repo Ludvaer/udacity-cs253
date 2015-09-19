@@ -21,7 +21,7 @@ adr = {
             'blogpost' : '/blog/newpost',
         }
 
-homeLinkString ='<br><a href="http://%s">home</a>'%app_identity.get_default_version_hostname()
+homeLinkString ='<a href="http://%s">home</a>'%app_identity.get_default_version_hostname()
 
 page = """
 <!DOCTYPE html>
@@ -37,9 +37,14 @@ page = """
         margin: auto;
         font-size: 20px;
     }
-    .error {
-        color: red;
+    h1 {
+        color: #111;
+        display: block;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #ccc;
     }
+
     label {
         display: block; font-size: 20px;
     }
@@ -75,6 +80,10 @@ page = """
     li {
         margin: 1em
     }
+
+    .error {
+        color: red;
+    }
     
     .main-title {
         color: #111;
@@ -82,7 +91,8 @@ page = """
         font-size: 40px;
         font-weight: bold;
         text-align: center;
-        margin-bottom: 30px;
+        margin: auto;
+        margin-bottom: 1em;
         border-bottom: 2px solid #ccc;
         text-decoration: none;
     }
