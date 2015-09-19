@@ -3,7 +3,7 @@ from head import adr
 from head import fold
 
 title = "Hello World"
-page = 'Hello, World!<br>'
+page = 'Hello, World!'
 class HelloPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'

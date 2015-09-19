@@ -5,10 +5,10 @@ from head import projectName
 
 mainpaige = """
 <ul>
-<li><a href="%(hello)s">Hello, World</a> <br></li>
-<li><a href="%(rot13)s">Rot 13</a> <br></li>
-<li><a href="%(signUp)s">Sign Up</a> <br></li>
-<li><a href="%(blog)s">Blog</a> <br></li>
+<li><a href="%(hello)s">Hello, World</a></li>
+<li><a href="%(rot13)s">Rot 13</a></li>
+<li><a href="%(signup)s">Sign Up</a></li>
+<li><a href="%(blog)s">Blog</a></li>
 </ul>
 """%adr
 

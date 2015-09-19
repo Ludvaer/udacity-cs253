@@ -16,12 +16,13 @@ adr = {
             'hello': '/hello',
             'rot13': '/rot13',
             'signUp' : '/signup',
+            'signup' : '/signup',
             'welcome' : '/signup/welcome',
             'blog' : '/blog',
             'blogpost' : '/blog/newpost',
         }
 
-homeLinkString ='<a href="http://%s">home</a>'%app_identity.get_default_version_hostname()
+homeLinkString ='<div><a href="http://%s">home</a></div>'%app_identity.get_default_version_hostname()
 
 page = """
 <!DOCTYPE html>
@@ -67,7 +68,7 @@ page = """
     textarea {
         font-size: 17px;
         padding: 0.3em;
-        height: 40em;
+        height: 30em;
         font-family: monospace;
         width:100%;
         box-sizing: border-box;
