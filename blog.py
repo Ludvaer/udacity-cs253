@@ -46,20 +46,12 @@ page = """
 """
 template = Template(page);
 
-class Post(db.Model):
-     
+class Post(db.Model):     
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
 class BlogPage(webapp2.RequestHandler):
-    #def write(self, *a, **kw):
-    #    self.response.out.write(*a, **kw)
-    #def render_str(self, template, **params):
-    #    return template.render(params)
-    #def render(self, template, **kw):
-    #    self.write(self.render_str(template, **kw))
-
     def write(self,**params):
         self.response.headers['Content-Type'] = 'text/html'
         c = template.render(params)

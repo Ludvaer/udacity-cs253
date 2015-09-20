@@ -64,7 +64,7 @@ def bake(username, password):
     #I want to chek for existance here, but I also wont to check for existance before get here
     #if exists(username):
     #    return  None  
-    #in current scenario user added without check will be removed later
+    #in current scenario user added without check (which is improbable) will be adeed but removed when two users with same name will be detected
     (hmacPsw,salt) = crypto.make(password);            
     (userCookie,pepper) = crypto.bake(username);
     user = User(name = username, password = hmacPsw, salt = salt, pepper = pepper)

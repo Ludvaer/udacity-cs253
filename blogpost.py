@@ -17,27 +17,18 @@ page = """
     <label>
         <div>subject</div><input type="text" name="subject" value ="{{subject|e}}">
     </label>
+    <div class="error"> {{errors}} </div>
     <label>
         <div>content</div><textarea name="content">{{content|e}}</textarea>
     </label>
-    <div class="error"> {{error}} </div>
+    <div class="error"> {{errorc}} </div>
     <input type="submit">
 </form>
-
 """
-
-
 
 template = Template(page);
 
 class PostPage(webapp2.RequestHandler):
-    #def write(self, *a, **kw):
-    #    self.response.out.write(*a, **kw)
-    #def render_str(self, template, **params):
-    #    t = jinja_env.get_template(template)
-    #    return t.render(params)
-    #def render(self, template, **kw):
-    #    self.write(self.render_str(template, **kw))
     def render(self, **kw):
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write(bfold(template.render(kw),title))
@@ -51,12 +42,11 @@ class PostPage(webapp2.RequestHandler):
             p.put()
             self.redirect(adr['blog']+"/"+str(p.key().id()))
             return
-        elif subject:
-            error = "No content - no entry!"
-        elif content:
-            error = "No subject detected - submission rejected." 
-        else:
-            error = "I would like a subject and some content." 
-        self.render(error = error,subject = subject,content =content )
+        args = {"subject":subject,"content":content}
+        if not subject:
+            args["errors"] = "No subject detected - submission rejected."             
+        if not content:
+            args["errorc"] = "No content - no entry!"
+        self.render(**args)
 
 

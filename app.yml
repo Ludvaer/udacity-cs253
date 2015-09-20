@@ -11,19 +11,22 @@ handlers:
 - url: /
   script: main.app
 
+- url: /css
+  static_dir: css
+
 - url: /hello.*
   script: hello.app
 
 - url: /rot13.*
   script: rot13.app
 
-- url: /signup.*
+- url: /in/signup.*
   script: signUp.app
 
-- url: /signin.*
+- url: /in/signin.*
   script: signUp.app
 
-- url: /welcome.*
+- url: /in/welcome.*
   script: welcome.app
 
 - url: /blog.*
