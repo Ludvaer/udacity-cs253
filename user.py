@@ -12,23 +12,31 @@ class User(db.Model):
     pepper = db.StringProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
+
+def getFirst(users):
+    for user in users:
+        return user
+    return None
 #return oldest user with given uname and kills others
+#knida smart way to keep names unique even if to users somehow registered simulltaniusly
 def getUser(username):
     users = db.GqlQuery("SELECT * FROM User WHERE name='%s' ORDER BY created ASC"%username)
-    if users.count() > 0:
-        keep = users[0]
+    user = getFirst(users)
+    if user:
+        uid = user.key().id()
         for u in users:
-            if u != keep:
+            if u.key().id() != uid:
                 u.delete()
-        return keep
+        return user
+    user = newUser
+    if (user and user.name == username):
+        return user
     return None
 
 def exists(username):
     user = getUser(username)
     if (user):
-        return True 
-    return (newUser and newUser.name == username)
-    
+        return True     
 
 def bake(username,psw):
     """Return the cookie foe newly baked user, error if exists."""
@@ -50,9 +58,7 @@ def getPepper(username):
     #so I'm trying to hash last created user and ceck it befor quering db
     user = getUser(username)
     if(user):
-        return str(user.pepper)
-    if(newUser and newUser.name == username):
-        return str(newUser.pepper)
+        return user.pepper
     return None
 
 def unbake(userCookie):

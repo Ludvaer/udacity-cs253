@@ -2,40 +2,54 @@ import webapp2
 import cgi
 import re
 import user
+import jinja2
+from jinja2 import Template
 from head import fold
 from head import adr
 
 
 title = "Sign Up "
 
-form = """
+page = """
  <label><h1>Sign Up</h1></label>
  <form method="post">
    <label>Name</label>
-   <input type=input name="username" value="%(name)s">
-   <label class="error">%(nameerr)s</label>
+   <input type=input name="username" value="{{name|e}}">
+   <label class="error">{{nameerr}}</label>
  
    <label>Password</label>
    <input type=password name="password" >
-   <label class="error">%(pswerr)s</label>
+   <label class="error">{{pswerr}}</label>
  
    <label>Verify password</label>
    <input type=password name="verify" >
-   <label class="error">%(vererr)s</label>
+   <label class="error">{{vererr}}</label>
  
    <label>E mail (now optional)</label>
-   <input type=input name="email" value="%(mail)s">
-   <label class="error">%(mailerr)s</label>
+   <input type=input name="email" value="{{mail|e}}">
+   <label class="error">{{mailerr}}</label>
 
    <input type=submit value="Sign Up">
 </form>
 """
+template = Template(page);
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PSW_RE = re.compile(r"^.{3,20}$")
 MAIL_RE = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
 
 class SignUpPage(webapp2.RequestHandler):
+    def write(self,**params):
+        self.response.headers['Content-Type'] = 'text/html'
+        c = template.render(params)
+        self.response.write(fold(c,title))
+    def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
+        self.write(name = name, mail = mail, nameerr = nameerr, pswerr = pswerr, vererr = vererr, mailerr = mailerr)
+    #def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
+    #    self.response.headers['Content-Type'] = 'text/html'
+    #    name = cgi.escape(name, quote = True)
+    #    mail = cgi.escape(mail, quote = True)
+    #    self.response.write(fold(form%{"name":name, "mail":mail, "nameerr":nameerr, "pswerr":pswerr, "vererr":vererr, "mailerr":mailerr},title))
     def validUsername(self, username):
         return USER_RE.match(username)
     def validPsw(self, psw):
@@ -45,13 +59,8 @@ class SignUpPage(webapp2.RequestHandler):
             return MAIL_RE.match(mail)
         else:
             return True
-    def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
-        self.response.headers['Content-Type'] = 'text/html'
-        name = cgi.escape(name, quote = True)
-        mail = cgi.escape(mail, quote = True)
-        self.response.write(fold(form%{"name":name, "mail":mail, "nameerr":nameerr, "pswerr":pswerr, "vererr":vererr, "mailerr":mailerr},title))
     def get(self):
-        self.write_form()
+        self.write()
     def post(self):
         username = self.request.get("username")
         email = self.request.get("email")

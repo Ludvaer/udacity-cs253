@@ -9,7 +9,7 @@ def randomword(length):
 
 
 def hmake(s, salt):
-    return hmac.new(salt,s,hashlib.sha256).hexdigest()
+    return hmac.new(str(salt),s,hashlib.sha256).hexdigest()
 def make(s):
     salt = randomword(10)
     hmacs = hmake(s,salt)
@@ -25,7 +25,7 @@ def unbake(cookie, getSalt):
     if hasattr(getSalt, '__call__'):
         salt = getSalt(s);
     else:
-        salt = str(getSalt)
+        salt = getSalt
     if (salt and (hmacs == hmake(s,salt))):
         return s
     else:

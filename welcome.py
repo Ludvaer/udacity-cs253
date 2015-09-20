@@ -1,5 +1,4 @@
 import webapp2
-import cgi
 import user
 from head import adr
 from head import fold
