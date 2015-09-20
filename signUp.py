@@ -3,14 +3,13 @@ import jinja2
 import re
 import head
 import user
-
 from jinja2 import Template
 
 
 title = "Sign Up "
 
 page = """
- <label><h1>Sign Up</h1></label>
+ <label><h1>{% if isSignup %}Sign Up{% else %}Sign In{% endif %}</h1></label>
  <form method="post">
    <label>Name</label>
    <input type=input name="username" value="{{name|e}}">
@@ -20,6 +19,8 @@ page = """
    <input type=password name="password" >
    <label class="error">{{pswerr}}</label>
  
+   {% if isSignup %}
+
    <label>Verify password</label>
    <input type=password name="verify" >
    <label class="error">{{vererr}}</label>
@@ -28,7 +29,9 @@ page = """
    <input type=input name="email" value="{{mail|e}}">
    <label class="error">{{mailerr}}</label>
 
-   <input type=submit value="Sign Up">
+   {% endif %}
+
+   <input type=submit value="{% if isSignup %}Sign Up{% else %}Sign In{% endif %}">
 </form>
 """
 template = Template(page);
@@ -37,7 +40,7 @@ USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PSW_RE = re.compile(r"^.{3,20}$")
 MAIL_RE = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
 
-class SignUpPage(webapp2.RequestHandler):
+class SignPage(webapp2.RequestHandler):
     def write(self,**params):
         self.response.headers['Content-Type'] = 'text/html'
         c = template.render(params)
@@ -55,6 +58,10 @@ class SignUpPage(webapp2.RequestHandler):
             return True
     def get(self):
         self.write()
+
+class SignUpPage(SignPage):
+    def write(self,**kw):
+        super(SignUpPage,self).write(isSignup = True,**kw)
     def post(self):
         username = self.request.get("username")
         email = self.request.get("email")
@@ -83,12 +90,31 @@ class SignUpPage(webapp2.RequestHandler):
             mailerr = "Invalid mail."
         
         if(nameerr == "" and pswerr=="" and vererr=="" and mailerr==""):
-
-            userCookie = user.bake(username, psw)   
-            self.redirect(head.adr['welcome']);      
+            userCookie = user.bake(username, psw)      
             self.response.headers.add_header('Set-Cookie', str('user=%s; Path=/'%userCookie)) 
+            self.redirect(head.adr['welcome']);   
         else:
             self.write_form(username,email,nameerr,pswerr,vererr,mailerr)
+
+class SignInPage(SignPage):
+    def write(self,**kw):
+        super(SignInPage,self).write(isSignup = False,**kw)
+    def post(self):
+        username = self.request.get("username")
+        password =  self.request.get("password")
+        u =  user.getUser(username)
+        nameerr =""
+        pswerr=""
+        if (u):
+            if u.check(password):
+                userCookie = u.bake()
+                self.response.headers.add_header('Set-Cookie', str('user=%s; Path=/'%userCookie)) 
+                self.redirect(head.adr['welcome']);   
+            else:
+                self.write(name = username, nameerr = "Incorrect password.")
+        else:
+            self.write(name = username, nameerr = "User not found.")
+
 
 class ClearPage(webapp2.RequestHandler):
     def get(self):
@@ -103,6 +129,7 @@ class ClearPage(webapp2.RequestHandler):
 from welcome import WelcomePage
 app = webapp2.WSGIApplication([    
     (head.adr['signup'], SignUpPage),
+    (head.adr['signin'], SignInPage),
     (head.adr['welcome'], WelcomePage),
-    (head.adr['signup']+'/clean', ClearPage),
+    (head.adr['signup']+'/cleaneveryuser', ClearPage),
 ], debug = head.debug)

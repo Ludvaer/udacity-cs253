@@ -20,6 +20,12 @@ handlers:
 - url: /signup.*
   script: signUp.app
 
+- url: /signin.*
+  script: signUp.app
+
+- url: /welcome.*
+  script: welcome.app
+
 - url: /blog.*
   script: blog.app
 

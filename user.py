@@ -2,7 +2,7 @@ from google.appengine.ext import db
 import crypto
 
 
-newUser = None
+userCache = None
 
 
 class User(db.Model):     
@@ -11,15 +11,30 @@ class User(db.Model):
     salt = db.StringProperty(required = True)
     pepper = db.StringProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
+    def put(self):
+        global userCache
+        userCache = self
+        super(User,self).put()
+    def check(self,password):
+        return crypto.check(password, self.salt, self.password)
+    def bake(self):
+        (userCookie,pepper) = crypto.bake(self.name)
+        self.pepper = pepper
+        self.put()
+        return userCookie
 
 
 def getFirst(users):
     for user in users:
         return user
     return None
+
 #return oldest user with given uname and kills others
 #knida smart way to keep names unique even if to users somehow registered simulltaniusly
 def getUser(username):
+    user = userCache
+    if (user and user.name == username):
+        return user
     users = db.GqlQuery("SELECT * FROM User WHERE name='%s' ORDER BY created ASC"%username)
     user = getFirst(users)
     if user:
@@ -28,28 +43,34 @@ def getUser(username):
             if u.key().id() != uid:
                 u.delete()
         return user
-    user = newUser
-    if (user and user.name == username):
-        return user
     return None
+
+
+
+def cleanUsers():
+    userCache = None
+    users = User.all()
+    for u in users:
+        u.delete()  
+
 
 def exists(username):
     user = getUser(username)
     if (user):
         return True     
 
-def bake(username,psw):
+def bake(username, password):
     """Return the cookie foe newly baked user, error if exists."""
     #I want to chek for existance here, but I also wont to check for existance before get here
     #if exists(username):
     #    return  None  
-    (hmacPsw,salt) = crypto.make(psw);            
+    #in current scenario user added without check will be removed later
+    (hmacPsw,salt) = crypto.make(password);            
     (userCookie,pepper) = crypto.bake(username);
-    u = User(name = username, password = hmacPsw, salt = salt, pepper = pepper)
-    global newUser
-    newUser = u
-    u.put() #put from local variable incase smth happens to global (is it possible?)
+    user = User(name = username, password = hmacPsw, salt = salt, pepper = pepper)
+    user.put()
     return userCookie;
+
 
 def getPepper(username):
     """Return pepper from user by username."""
@@ -65,8 +86,4 @@ def unbake(userCookie):
     """Return the name retrieved from cookie."""
     return crypto.unbake(userCookie,getPepper)
 
-def cleanUsers():
-    users = User.all()
-    for u in users:
-        u.delete()  
 

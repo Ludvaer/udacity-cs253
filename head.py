@@ -17,7 +17,8 @@ adr = {
             'rot13': '/rot13',
             'signUp' : '/signup',
             'signup' : '/signup',
-            'welcome' : '/signup/welcome',
+            'signin' : '/signin',
+            'welcome' : '/welcome',
             'blog' : '/blog',
             'blogpost' : '/blog/newpost',
         }
@@ -74,6 +75,7 @@ page = """
         box-sizing: border-box;
     }
     input[type=submit] {
+        margin-top: 1em;
         width:auto;
         font-size: 24px;
         font-family: Helvetica, Arial, sans-serif;
