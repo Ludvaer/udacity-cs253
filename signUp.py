@@ -1,16 +1,10 @@
 import webapp2
 import cgi
 import re
-from google.appengine.ext import db
-import crypto
+import user
 from head import fold
 from head import adr
-from head import projectName
 
-newUser = None
-
-def getNewUser():
-    return newUser
 
 title = "Sign Up "
 
@@ -37,21 +31,9 @@ form = """
 </form>
 """
 
-class User(db.Model):     
-    name = db.StringProperty(required = True)
-    password = db.StringProperty(required = True)
-    salt = db.StringProperty(required = True)
-    pepper = db.StringProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-
-
-
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PSW_RE = re.compile(r"^.{3,20}$")
 MAIL_RE = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
-
-
-
 
 class SignUpPage(webapp2.RequestHandler):
     def validUsername(self, username):
@@ -65,6 +47,8 @@ class SignUpPage(webapp2.RequestHandler):
             return True
     def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
         self.response.headers['Content-Type'] = 'text/html'
+        name = cgi.escape(name, quote = True)
+        mail = cgi.escape(mail, quote = True)
         self.response.write(fold(form%{"name":name, "mail":mail, "nameerr":nameerr, "pswerr":pswerr, "vererr":vererr, "mailerr":mailerr},title))
     def get(self):
         self.write_form()
@@ -74,7 +58,7 @@ class SignUpPage(webapp2.RequestHandler):
         psw =  self.request.get("password")   
         psw2 =  self.request.get("verify")
         if(self.validUsername(username)):
-            if ((db.GqlQuery("SELECT * FROM User WHERE name='%s'"%username)).count() > 0):
+            if user.exists(username):
                 nameerr = "Username already exists."
             else:
                 nameerr = ""
@@ -96,18 +80,12 @@ class SignUpPage(webapp2.RequestHandler):
             mailerr = "Invalid mail."
         
         if(nameerr == "" and pswerr=="" and vererr=="" and mailerr==""):
-            (hmacPsw,salt) = crypto.make(psw);            
-            (userCookie,pepper) = crypto.bake(username);
-            global newUser
-            newUser = User(name = username, password = hmacPsw, salt = salt, pepper = pepper)
-            newUser.put()
-            
+
+            userCookie = user.bake(username, psw)
             #self.redirect(adr['welcome'] + "?username=" + username) weird old vith  GET userneme    
             self.redirect(adr['welcome']);      
             self.response.headers.add_header('Set-Cookie', str('user=%s; Path=/'%userCookie)) 
         else:
-            username = cgi.escape(username, quote = True)            
-            email = cgi.escape(email, quote = True)
             self.write_form(username,email,nameerr,pswerr,vererr,mailerr)
 
 class ClearPage(webapp2.RequestHandler):
@@ -116,9 +94,7 @@ class ClearPage(webapp2.RequestHandler):
         self.response.write(fold('<form method="post"><input type=submit value="Clear"></form>',title))
     def post(self):
         self.response.headers['Content-Type'] = 'text/html'
-        users = User.all()
-        for u in users:
-            u.delete()      
+        user.cleanUsers()    
         self.response.write(fold("Clean!",title))
 
 
