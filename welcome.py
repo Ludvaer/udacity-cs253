@@ -2,8 +2,6 @@ import webapp2
 import user
 import head
 
-
-
 title = "welcome"
 
 

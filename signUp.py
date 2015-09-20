@@ -124,20 +124,26 @@ class SignInPage(SignPage):
             self.write(name = username, nameerr = "User not found.")
 
 
+class SignOutPage(webapp2.RequestHandler):
+    def get(self):
+        self.response.set_cookie('user', "", expires= datetime.datetime.now() - datetime.timedelta(days = 7), path='/')
+        self.redirect(head.adr['signup']);
+
 class ClearPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(head.fold('<form method="post"><input type=submit value="Clear"></form>',title))
+        self.response.write(head.fold('<form method="post"><input type=submit value="Clear"></form>',"Clean Users"))
     def post(self):
         self.response.headers['Content-Type'] = 'text/html'
         user.cleanUsers()    
-        self.response.write(head.fold("Clean!",title))
+        self.response.write(head.fold("Clean!","Cleaned"))
 
 
 from welcome import WelcomePage
 app = webapp2.WSGIApplication([    
     (head.adr['signup'], SignUpPage),
     (head.adr['signin'], SignInPage),
+    (head.adr['signout'], SignOutPage),
     (head.adr['welcome'], WelcomePage),
     (head.adr['signup']+'/cleaneveryuser', ClearPage),
 ], debug = head.debug)

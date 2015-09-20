@@ -26,6 +26,12 @@ handlers:
 - url: /in/signin.*
   script: signUp.app
 
+- url: /in/login.*
+  script: signUp.app
+
+- url: /in/logout.*
+  script: signUp.app
+
 - url: /in/welcome.*
   script: welcome.app
 

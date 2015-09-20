@@ -8,7 +8,8 @@ mainpaige = """
 <li><a href="%(hello)s">Hello, World</a></li>
 <li><a href="%(rot13)s">Rot 13</a></li>
 <li><a href="%(signup)s">Sign Up</a></li>
-<li><a href="%(signin)s">Sign In</a></li>
+<li><a href="%(signin)s">Log In</a></li>
+<li><a href="%(signout)s">Log Out</a></li>
 <li><a href="%(blog)s">Blog</a></li>
 </ul>
 """%adr
