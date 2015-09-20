@@ -1,11 +1,10 @@
 import webapp2
-import cgi
-import re
-import user
 import jinja2
+import re
+import head
+import user
+
 from jinja2 import Template
-from head import fold
-from head import adr
 
 
 title = "Sign Up "
@@ -42,14 +41,9 @@ class SignUpPage(webapp2.RequestHandler):
     def write(self,**params):
         self.response.headers['Content-Type'] = 'text/html'
         c = template.render(params)
-        self.response.write(fold(c,title))
+        self.response.write(head.fold(c,title))
     def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
         self.write(name = name, mail = mail, nameerr = nameerr, pswerr = pswerr, vererr = vererr, mailerr = mailerr)
-    #def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
-    #    self.response.headers['Content-Type'] = 'text/html'
-    #    name = cgi.escape(name, quote = True)
-    #    mail = cgi.escape(mail, quote = True)
-    #    self.response.write(fold(form%{"name":name, "mail":mail, "nameerr":nameerr, "pswerr":pswerr, "vererr":vererr, "mailerr":mailerr},title))
     def validUsername(self, username):
         return USER_RE.match(username)
     def validPsw(self, psw):
@@ -90,9 +84,8 @@ class SignUpPage(webapp2.RequestHandler):
         
         if(nameerr == "" and pswerr=="" and vererr=="" and mailerr==""):
 
-            userCookie = user.bake(username, psw)
-            #self.redirect(adr['welcome'] + "?username=" + username) weird old vith  GET userneme    
-            self.redirect(adr['welcome']);      
+            userCookie = user.bake(username, psw)   
+            self.redirect(head.adr['welcome']);      
             self.response.headers.add_header('Set-Cookie', str('user=%s; Path=/'%userCookie)) 
         else:
             self.write_form(username,email,nameerr,pswerr,vererr,mailerr)
@@ -100,16 +93,16 @@ class SignUpPage(webapp2.RequestHandler):
 class ClearPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(fold('<form method="post"><input type=submit value="Clear"></form>',title))
+        self.response.write(head.fold('<form method="post"><input type=submit value="Clear"></form>',title))
     def post(self):
         self.response.headers['Content-Type'] = 'text/html'
         user.cleanUsers()    
-        self.response.write(fold("Clean!",title))
+        self.response.write(head.fold("Clean!",title))
 
 
 from welcome import WelcomePage
 app = webapp2.WSGIApplication([    
-    (adr['signup'], SignUpPage),
-    (adr['welcome'], WelcomePage),
-    (adr['signup']+'/clean', ClearPage),
-], debug=True)
+    (head.adr['signup'], SignUpPage),
+    (head.adr['welcome'], WelcomePage),
+    (head.adr['signup']+'/clean', ClearPage),
+], debug = head.debug)

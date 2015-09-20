@@ -1,7 +1,7 @@
 import webapp2
 import user
-from head import adr
-from head import fold
+import head
+
 
 
 title = "welcome"
@@ -16,10 +16,10 @@ class WelcomePage(webapp2.RequestHandler):
         #username = crypto.unbake(userCookie,getPepper)
         self.response.headers['Content-Type'] = 'text/html'      
         if(username):
-            self.response.write(fold('Hello, %s!'%username,title))
+            self.response.write(head.fold('Hello, %s!'%username,title))
         else:
-            self.redirect(adr['signup']);
+            self.redirect(head.adr['signup']);
 
 app = webapp2.WSGIApplication([    
-    (adr['welcome'], WelcomePage),
+    (head.adr['welcome'], WelcomePage),
 ], debug=True)
