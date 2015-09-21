@@ -47,8 +47,8 @@ class SignPage(webapp2.RequestHandler):
         params['submitText'] = self.submitText
         c = template.render(params)
         self.response.write(head.fold(c,self.title))
-    def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
-        self.write(name = name, mail = mail, nameerr = nameerr, pswerr = pswerr, vererr = vererr, mailerr = mailerr)
+    #def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
+    #    self.write(name = name, mail = mail, nameerr = nameerr, pswerr = pswerr, vererr = vererr, mailerr = mailerr)
     def validUsername(self, username):
         return USER_RE.match(username)
     def validPsw(self, psw):
@@ -74,35 +74,37 @@ class SignUpPage(SignPage):
         psw =  self.request.get("password")   
         psw2 =  self.request.get("verify")
 
-        if(self.validUsername(username)):
+        args = {"name":username, "mail": email }
+        err = False
+
+        if self.validUsername(username):
             if user.exists(username):
-                nameerr = "Username already exists."
-            else:
-                nameerr = ""
+                args["nameerr"] = "Username already exists."
+                err = True
         else:
-            nameerr = "Invalid username."
+            args["nameerr"] = "Invalid username."
+            err = True
 
-        if(self.validPsw(psw)):
-            pswerr = ""
-            if(psw==psw2):
-                vererr = ""
-            else:
-                vererr = "Passwords do not match."
+        if self.validPsw(psw):
+            if psw != psw2:
+                args["vererr"] = "Passwords do not match."
+                err = True
         else:
-            vererr = ""
-            pswerr = "Invalid password."
+            args["pswerr"] = "Invalid password."
+            err = True
 
-        if(self.validMail(email)):
-            mailerr = ""
-        else:
-            mailerr = "Invalid mail."
+        if not (self.validMail(email)):
+            args["mailerr"] = "Invalid mail."
+            err = True
         
-        if(nameerr == "" and pswerr=="" and vererr=="" and mailerr==""):
-            userCookie = user.bake(username, psw)
-            self.setUserCookie(userCookie)
-            self.redirect(head.adr['welcome']);   
-        else:
-            self.write_form(username,email,nameerr,pswerr,vererr,mailerr)
+        if err:
+            self.write(**args)
+            return
+
+        userCookie = user.bake(username, psw)
+        self.setUserCookie(userCookie)
+        self.redirect(head.adr['welcome']);   
+
 
 class SignInPage(SignPage):
     title = "Log In"
@@ -112,16 +114,31 @@ class SignInPage(SignPage):
     def post(self):
         username = self.request.get("username")
         password =  self.request.get("password")
+        args = {"name":username}
+        err = False
+
+        if not self.validUsername(username):
+            args["nameerr"] = "Invalid username."
+            err = True
+
+        if not self.validPsw(password):
+            args["pswerr"] = "Invalid password."
+            err = True
+
+        if err:
+            self.write(**args)
+            return
+
         u =  user.getUser(username)
         if (u):
             if u.check(password):
                 userCookie = u.bake()                
                 self.setUserCookie(userCookie)
-                self.redirect(head.adr['welcome']);   
-            else:
-                self.write(name = username, nameerr = "Incorrect password.")
-        else:
-            self.write(name = username, nameerr = "User not found.")
+                self.redirect(head.adr['welcome']); 
+                return
+            self.write(pswerr = "Incorrect password.",**args)
+            return
+        self.write(nameerr = "User not found.",**args)
 
 
 class SignOutPage(webapp2.RequestHandler):

@@ -9,7 +9,9 @@ def randomword(length):
 
 
 def hmake(s, salt):
-    return hmac.new(str(salt),str(s),hashlib.sha256).hexdigest()
+    salt = salt.encode('utf-8')
+    s = s.encode('utf-8')
+    return hmac.new(salt,s,hashlib.sha256).hexdigest()
 
 def make(s):
     salt = randomword(10)
