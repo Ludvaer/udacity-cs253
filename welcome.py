@@ -17,4 +17,4 @@ class WelcomePage(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([    
     (head.adr['welcome'], WelcomePage),
-], debug=True)
+], debug = head.debug)

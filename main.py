@@ -1,7 +1,5 @@
 import webapp2
-from head import adr
-from head import fold
-from head import projectName
+import head
 
 mainpaige = """
 <ul>
@@ -12,15 +10,15 @@ mainpaige = """
 <li><a href="%(signout)s">Log Out</a></li>
 <li><a href="%(blog)s">Blog</a></li>
 </ul>
-"""%adr
+"""%head.adr
 
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(fold(mainpaige,noHomeLink = True))
+        self.response.write(head.fold(mainpaige,noHomeLink = True))
 
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-], debug=True)
+], debug=head.debug)

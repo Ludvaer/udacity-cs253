@@ -1,8 +1,7 @@
 import webapp2
 import cgi
 import re
-from head import adr
-from head import fold
+import head
 
 title = "Rot13"
 
@@ -25,7 +24,7 @@ class Rot13Page(webapp2.RequestHandler):
         return pattern.sub(lambda m: rep[re.escape(m.group(0))], s) 
     def write_form(self,s):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(fold(form%s,title))
+        self.response.write(head.fold(form%s,title))
     def get(self):
         self.write_form("")
     def post(self):
@@ -35,5 +34,5 @@ class Rot13Page(webapp2.RequestHandler):
         self.write_form(text)
 
 app = webapp2.WSGIApplication([    
-    (adr['rot13'], Rot13Page),
-], debug=True)
+    (head.adr['rot13'], Rot13Page),
+], debug=head.debug)

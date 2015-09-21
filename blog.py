@@ -1,28 +1,26 @@
 import os
 import webapp2
 import jinja2
+import head
 from google.appengine.ext import db
 from jinja2 import Template
-from head import fold
-from head import adr
-from head import templateDir
 
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(templateDir), autoescape=False)
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(head.templateDir), autoescape=False)
 
 btitle = "Blog"
 
-bhomeLinkString = '<br> <a href="%s">Blog home page</a> <br>'%adr['blog']
+bhomeLinkString = '<a href="%s">Blog home page</a>'%head.adr['blog']
 
 bpage = """
 <a href="%(blog)s" class="main-title">Lurr CS 253 Blog</a>
 {{content}}
 {{bhomeLink}}
-"""%adr
+"""%head.adr
 
 btemplate = Template(bpage)
 
 def bfold(content, title = "", noHomeLink = False):
-    return fold(btemplate.render({"content":content, "bhomeLink": "" if noHomeLink else bhomeLinkString}), title + " " + btitle)
+    return head.fold(btemplate.render({"content":content, "bhomeLink": "" if noHomeLink else bhomeLinkString}), title + " " + btitle)
 
 
 page = """
@@ -57,7 +55,7 @@ class BlogPage(webapp2.RequestHandler):
         c = template.render(params)
         self.response.write(bfold(c,noHomeLink = True))
     def render(self, **params):
-        self.write(blogpost = adr['blogpost'],blog = adr['blog'],**params)
+        self.write(blogpost = head.adr['blogpost'],blog = head.adr['blog'],**params)
     def get(self):
         posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC LIMIT 13")     
         self.render(posts = posts);
@@ -76,7 +74,7 @@ class BlogPostPage(BlogPage):
 
 from blogpost import PostPage
 app = webapp2.WSGIApplication([
-    (adr['blog'], BlogPage),
-    (adr['blogpost'], PostPage),
-    (adr['blog']+'/.*', BlogPostPage)
-], debug=True)
+    (head.adr['blog'], BlogPage),
+    (head.adr['blogpost'], PostPage),
+    (head.adr['blog']+'/.*', BlogPostPage)
+], debug=head.debug)
