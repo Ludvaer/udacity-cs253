@@ -13,15 +13,15 @@ jinja_environment = jinja2.Environment(autoescape=False,
 projectName = "Lurr CS-253 Project"
 
 adr = {
-            'hello': '/hello',
-            'rot13': '/rot13',
-            'signup' : '/in/signup',
-            'signin' : '/in/login',
-            'signout' : '/in/logout',
-            'welcome' : '/in/welcome',
-            'blog' : '/blog',
-            'blogpost' : '/blog/newpost',
-        }
+          'hello': '/hello',
+          'rot13': '/rot13',
+          'signup' : '/blog/signup',
+          'signin' : '/blog/login',
+          'signout' : '/blog/logout',
+          'welcome' : '/blog/welcome',
+          'blog' : '/blog',
+          'blogpost' : '/blog/newpost',
+      }
 
 homeLinkString ='<div><a href="http://%s">home</a></div>'%app_identity.get_default_version_hostname()
 
@@ -31,11 +31,11 @@ page = """
   <head>
       <title>{{title|e}}</title>
       <link rel="stylesheet" type="text/css" href="/css/main.css">
-  <head>
+  </head>
   <body>
-    {{content}}
+    {{content}} 
+    {{homeLink}}
   </body>
-  {{homeLink}}
 </html>
 """
 

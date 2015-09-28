@@ -2,6 +2,7 @@ import webapp2
 import head
 
 mainpaige = """
+<nav>
 <ul>
 <li><a href="%(hello)s">Hello, World</a></li>
 <li><a href="%(rot13)s">Rot 13</a></li>
@@ -10,6 +11,7 @@ mainpaige = """
 <li><a href="%(signout)s">Log Out</a></li>
 <li><a href="%(blog)s">Blog</a></li>
 </ul>
+</nav>
 """%head.adr
 
 

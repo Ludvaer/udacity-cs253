@@ -20,19 +20,19 @@ handlers:
 - url: /rot13.*
   script: rot13.app
 
-- url: /in/signup.*
+- url: /blog/signup.*
   script: signUp.app
 
-- url: /in/signin.*
+- url: /blog/signin.*
   script: signUp.app
 
-- url: /in/login.*
+- url: /blog/login.*
   script: signUp.app
 
-- url: /in/logout.*
+- url: /blog/logout.*
   script: signUp.app
 
-- url: /in/welcome.*
+- url: /blog/welcome.*
   script: welcome.app
 
 - url: /blog.*

@@ -7,24 +7,24 @@ import datetime
 from jinja2 import Template
 
 page = """
- <label><h1>{{title}}</h1></label>
+ <h1>{{title}}</h1>
  <form method="post">
    <label>Name</label>
-   <input type=input name="username" value="{{name|e}}">
+   <input type="text" name="username" {% if name %}value="{{name|e}}"{% endif %}>
    <label class="error">{{nameerr}}</label>
  
    <label>Password</label>
-   <input type=password name="password" >
+   <input type="password" name="password" >
    <label class="error">{{pswerr}}</label>
  
    {% if isSignup %}
 
    <label>Verify password</label>
-   <input type=password name="verify" >
+   <input type="password" name="verify" >
    <label class="error">{{vererr}}</label>
  
    <label>E mail (now optional)</label>
-   <input type=input name="email" value="{{mail|e}}">
+   <input type="text" name="email" {% if mail %}value="{{mail|e}}"{% endif %}>
    <label class="error">{{mailerr}}</label>
 
    {% endif %}
@@ -47,8 +47,6 @@ class SignPage(webapp2.RequestHandler):
         params['submitText'] = self.submitText
         c = template.render(params)
         self.response.write(head.fold(c,self.title))
-    #def write_form(self,name = "", mail="", nameerr="", pswerr="", vererr="", mailerr="",):
-    #    self.write(name = name, mail = mail, nameerr = nameerr, pswerr = pswerr, vererr = vererr, mailerr = mailerr)
     def validUsername(self, username):
         return USER_RE.match(username)
     def validPsw(self, psw):
@@ -85,12 +83,12 @@ class SignUpPage(SignPage):
             args["nameerr"] = "Invalid username."
             err = True
 
-        if self.validPsw(psw):
-            if psw != psw2:
-                args["vererr"] = "Passwords do not match."
-                err = True
-        else:
+        if not self.validPsw(psw):        
             args["pswerr"] = "Invalid password."
+            err = True
+
+        if psw != psw2:
+            args["vererr"] = "Passwords do not match."
             err = True
 
         if not (self.validMail(email)):

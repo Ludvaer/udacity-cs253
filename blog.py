@@ -2,6 +2,7 @@ import os
 import webapp2
 import jinja2
 import head
+import json
 from google.appengine.ext import db
 from jinja2 import Template
 
@@ -48,33 +49,62 @@ class Post(db.Model):
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
+    def toDict(self):
+        return {"content" : self.content.encode('utf-8'), "created" : (self.created.isoformat()), "last_modified" : (self.created.isoformat()), "subject" : self.subject.encode('utf-8')}
 
 class BlogPage(webapp2.RequestHandler):
-    def write(self,**params):
+    def write(self,c):
+        self.response.write(bfold(c,noHomeLink = True))        
+    def render(self, **params):
+        params["blogpost"] = head.adr['blogpost'];
+        params["blog"] = head.adr['blog'];
         self.response.headers['Content-Type'] = 'text/html'
         c = template.render(params)
-        self.response.write(bfold(c,noHomeLink = True))
-    def render(self, **params):
-        self.write(blogpost = head.adr['blogpost'],blog = head.adr['blog'],**params)
+        self.write(c)
+    def renderJson(self, **params):
+        self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
+        list = [post.toDict() for post in params["posts"]]
+        self.response.write(json.dumps(list))
     def get(self):
         posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC LIMIT 13")     
         self.render(posts = posts);
 
-class BlogPostPage(BlogPage):
-    def write(self,**params):
-        self.response.headers['Content-Type'] = 'text/html'
-        c = template.render(params)
-        self.response.write(bfold(c,noHomeLink = False))
+class BlogSinglePage(BlogPage):
+    def write(self,c):
+        self.response.write(bfold(c,noHomeLink = False))  
     def get(self):
-        pid = self.request.path.split('/')[-1] 
-
+        adr = self.request.path.split('/')[-1].split('.')
+        pid = adr[0]
         posts = db.GqlQuery("SELECT * FROM Post WHERE __key__ = KEY('Post',%s)"%pid)     
-        self.render(posts = posts);    
-        
+        if(adr[-1] == "json"):
+            self.renderJson(posts = posts)
+        else:
+            self.render(posts = posts); 
+
+class BlogPageJson(BlogPage):
+    def render(self, **params):
+        self.renderJson(**params)
+
+class BlogSinglePageJson(BlogSinglePage):
+    def render(self, **params):
+        self.renderJson(**params)
+
+   
 
 from blogpost import PostPage
+from signUp import SignUpPage
+from signUp import SignOutPage
+from signUp import SignInPage
+from welcome import WelcomePage
 app = webapp2.WSGIApplication([
     (head.adr['blog'], BlogPage),
+    (head.adr['blog']+".json", BlogPageJson),
+    (head.adr['blog']+"/.json", BlogPageJson),
+    (head.adr['blog']+"/signup", SignUpPage),
+    (head.adr['blog']+"/login", SignInPage),
+    (head.adr['blog']+"/logout", SignOutPage),
+    (head.adr['blog']+"/welcome", WelcomePage),
     (head.adr['blogpost'], PostPage),
-    (head.adr['blog']+'/.*', BlogPostPage)
+    (head.adr['blogpost']+".json", BlogSinglePageJson),
+    (head.adr['blog']+'/.*', BlogSinglePage)
 ], debug=head.debug)

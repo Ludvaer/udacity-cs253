@@ -14,15 +14,18 @@ title = "New Post"
 
 page = """
 <form method="post">
-    <label>
-        <div>subject</div><input type="text" name="subject" value ="{{subject|e}}">
-    </label>
-    <div class="error"> {{errors}} </div>
-    <label>
-        <div>content</div><textarea name="content">{{content|e}}</textarea>
-    </label>
-    <div class="error"> {{errorc}} </div>
-    <input type="submit">
+    <div>
+        <label>subject</label>
+        <input type="text" name="subject" {% if subject %}value ="{{subject|e}}"{% endif %}>
+        <div class="error"> {{errors}} </div>
+    </div>
+    
+    <div>
+        <label>content</label>
+        <textarea name="content">{{content|e}}</textarea> 
+        <div class="error"> {{errorc}} </div>
+    </div>
+    <input type="submit" value = "submit">
 </form>
 """
 
