@@ -1,9 +1,15 @@
 body {
+    margin: 0px;
+    padding: 0px;
+    background: #888;
+}
+
+.main {
     background: #ddd;
     font-family: Helvetica, Arial, sans-serif;
     max-width: 40em;
-    padding: 0 2%;
-    margin: 1em auto;
+    padding: 2%;
+    margin: 0px auto;
     font-size: 20px;
 }
 h1 {
@@ -22,13 +28,14 @@ label + label {
     margin-top: 20px;
 }
 form { 
-    margin:auto;
+    margin: 1em auto;
     margin-top: 1em;
     margin-bottom: 1em;
     max-width:30em;
     padding: 2%;
     box-sizing: border-box;
 }
+
 input {
     font-size: 17px;
     padding: 0.3em;
@@ -44,15 +51,34 @@ textarea {
     width:100%;
     box-sizing: border-box;
 }
+
+
 input[type=submit] {
-    margin-top: 1em;
     width:auto;
     font-size: 24px;
-    font-family: Helvetica, Arial, sans-serif;
     padding: 0.3em;
 }
+
 li {
     margin: 1em
+}
+
+.panel {
+    margin: 0px auto;
+    margin-top: 0px;
+    max-width:30em;
+    padding: 0px;
+    font-size: 15;
+
+}
+
+.panelbutton[type=submit] {
+    margin: 0px;
+    padding: 0px;
+    font-size: 15px;
+    color: #111;
+    opacity: 0.5;
+
 }
 
 .error {
@@ -73,35 +99,29 @@ li {
 }
 
 .post {        
-    margin: 1em;
-    background: #eee;
+    margin: 0px;
+    padding: 1em 0px;
     width: auto; 
-    border: 1px solid #ccc       
+ 
 }
 .post-header {
-    position:relative;
     border-bottom: 1px dotted #ccc;
-    background: #f7f7f7;
-    padding: 1em;
-    padding-bottom: 0.5em;
+    padding: 0.5em 1em;    
 }
 .post-subject {
     color: #222;
     font-weight: bold;
-    font-size: 20px; 
+    font-size: 24px; 
     text-decoration: none;
 }
 .post-date {
-    position: absolute;
-    right: 1em;
-    bottom: 0.75em;
+    float: right;
     font-size: 15px;
     color: #aaa;
 }
 .post-content {        
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-size: 17px; 
-    padding: 1em;
-    padding-top: 0.5em;
+    font-size: 20px; 
+    padding: 0.5em 1em;  
 }

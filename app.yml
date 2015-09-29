@@ -14,6 +14,9 @@ handlers:
 - url: /css
   static_dir: css
 
+- url: /static
+  static_dir: static
+
 - url: /hello.*
   script: hello.app
 
@@ -37,6 +40,9 @@ handlers:
 
 - url: /blog.*
   script: blog.app
+
+- url: /timer.*
+  script: timer.app
 
 - url: /favicon\.ico
   static_files: static/images/favicon.ico

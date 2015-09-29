@@ -3,6 +3,7 @@ import head
 
 mainpaige = """
 <nav>
+<h6>Udacity related pages:</h6>
 <ul>
 <li><a href="%(hello)s">Hello, World</a></li>
 <li><a href="%(rot13)s">Rot 13</a></li>
@@ -10,6 +11,10 @@ mainpaige = """
 <li><a href="%(signin)s">Log In</a></li>
 <li><a href="%(signout)s">Log Out</a></li>
 <li><a href="%(blog)s">Blog</a></li>
+</ul>
+<h6>Experimental:</h6>
+<ul>
+<li><a href="%(timer)s">Timer</a></li>
 </ul>
 </nav>
 """%head.adr
@@ -24,3 +29,4 @@ class MainPage(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage),
 ], debug=head.debug)
+ 

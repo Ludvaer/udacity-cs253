@@ -21,6 +21,7 @@ adr = {
           'welcome' : '/blog/welcome',
           'blog' : '/blog',
           'blogpost' : '/blog/newpost',
+          'timer' : '/timer',
       }
 
 homeLinkString ='<div><a href="http://%s">home</a></div>'%app_identity.get_default_version_hostname()
@@ -33,8 +34,10 @@ page = """
       <link rel="stylesheet" type="text/css" href="/css/main.css">
   </head>
   <body>
+  <div class="main">
     {{content}} 
     {{homeLink}}
+  </div>
   </body>
 </html>
 """

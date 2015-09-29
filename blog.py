@@ -39,6 +39,7 @@ page = """
             }
         </script>
         <div class="post-content">{{post.content|e}}</div>
+        <form class="panel" method="post"> <input class="panel" type="hidden" name="postid" value="{{post.key().id()}}"/> <input  type="submit" class="panelbutton" value="delete"/></form>
     </div>
     {% endfor %}
     </div>
@@ -65,9 +66,17 @@ class BlogPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
         list = [post.toDict() for post in params["posts"]]
         self.response.write(json.dumps(list))
-    def get(self):
+    def renderPosts(self):
         posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC LIMIT 13")     
-        self.render(posts = posts);
+        self.render(posts = posts)
+    def post(self):
+        pid = self.request.get("postid")
+        posts = db.GqlQuery("SELECT * FROM Post WHERE __key__ = KEY('Post',%s)"%pid)  
+        for post in posts:
+            post.delete()
+        self.renderPosts()
+    def get(self):
+        self.renderPosts()
 
 class BlogSinglePage(BlogPage):
     def write(self,c):
