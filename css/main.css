@@ -1,10 +1,16 @@
+html {
+    height:100%;
+}
+
 body {
     margin: 0px;
     padding: 0px;
     background: #888;
+    height:100%;
 }
 
 .main {
+    min-height:100%;
     background: #ddd;
     font-family: Helvetica, Arial, sans-serif;
     max-width: 40em;
@@ -31,7 +37,6 @@ form {
     margin: 1em auto;
     margin-top: 1em;
     margin-bottom: 1em;
-    max-width:30em;
     padding: 2%;
     box-sizing: border-box;
 }
@@ -63,23 +68,6 @@ li {
     margin: 1em
 }
 
-.panel {
-    margin: 0px auto;
-    margin-top: 0px;
-    max-width:30em;
-    padding: 0px;
-    font-size: 15;
-
-}
-
-.panelbutton[type=submit] {
-    margin: 0px;
-    padding: 0px;
-    font-size: 15px;
-    color: #111;
-    opacity: 0.5;
-
-}
 
 .error {
     color: red;
@@ -100,15 +88,18 @@ li {
 
 .post {        
     margin: 0px;
-    padding: 1em 0px;
+    padding: 1.5em 0px;
     width: auto; 
+    text-align: center;
  
 }
 .post-header {
+    text-align: left;
     border-bottom: 1px dotted #ccc;
-    padding: 0.5em 1em;    
+    padding: 0.3em 1em;    
 }
 .post-subject {
+    text-align: left;
     color: #222;
     font-weight: bold;
     font-size: 24px; 
@@ -119,9 +110,25 @@ li {
     font-size: 15px;
     color: #aaa;
 }
-.post-content {        
+.post-content { 
+text-align: left;       
     white-space: pre-wrap;
     word-wrap: break-word;
     font-size: 20px; 
-    padding: 0.5em 1em;  
+    padding: 0.3em 1em;  
+}
+
+.panel {
+    padding: 0px;
+    font-size: 15px;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.panelbutton[type=submit] {
+    margin: 0px auto;
+    padding: 0px;
+    font-size: 15px;
+    color: #111;
+    opacity: 0.5;
 }
