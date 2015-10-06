@@ -96,20 +96,26 @@ li {
 .post-header {
     text-align: left;
     border-bottom: 1px dotted #ccc;
-    padding: 0.3em 1em;    
+    padding: 0.3em 1em; 
+    position: relative;
+    overflow: auto;
+
 }
 .post-subject {
-    text-align: left;
     color: #222;
     font-weight: bold;
     font-size: 24px; 
     text-decoration: none;
+
 }
 .post-date {
-    float: right;
+    display:inline-block;
     font-size: 15px;
     color: #aaa;
+    float: right;
+    margin-top: 0.5em;
 }
+
 .post-content { 
 text-align: left;       
     white-space: pre-wrap;

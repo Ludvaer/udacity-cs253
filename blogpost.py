@@ -1,14 +1,13 @@
 import os
 import webapp2
 import jinja2
+import post
+import head
 from google.appengine.ext import db
 from jinja2 import Template
-from head import adr
-from head import templateDir
 from blog import bfold
-from blog import Post
 
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(templateDir), autoescape=False)
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(head.templateDir), autoescape=False)
 
 title = "New Post"
 
@@ -41,9 +40,8 @@ class PostPage(webapp2.RequestHandler):
         subject = self.request.get("subject") 
         content = self.request.get("content")
         if subject and content:
-            p = Post(subject = subject, content = content)
-            p.put()
-            self.redirect(adr['blog']+"/"+str(p.key().id()))
+            key = post.add(subject,content)
+            self.redirect(head.adr['blog']+"/"+str(key))
             return
         args = {"subject":subject,"content":content}
         if not subject:
@@ -53,3 +51,6 @@ class PostPage(webapp2.RequestHandler):
         self.render(**args)
 
 
+app = webapp2.WSGIApplication([
+    (head.adr['blogpost'], PostPage)
+], debug=head.debug)

@@ -3,7 +3,7 @@ import webapp2
 import jinja2
 import head
 import json
-from google.appengine.ext import db
+import post
 from jinja2 import Template
 
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(head.templateDir), autoescape=False)
@@ -31,7 +31,9 @@ page = """
     <div class="post">
         <div class="post-header" onclick="fclick{{post.key().id()}}()" >
             <a href = "{{blog}}/{{post.key().id()}}" class="post-subject"> {{post.subject|e}} </a>
-            <span class="post-date">{{post.created.strftime("%d %b %Y")|e}}</span>
+            <span class="post-date">
+                {{post.created.strftime("%d %b %Y")|e}}  
+            </span>
         </div>
         <script>
             function fclick{{post.key().id()}}() {
@@ -42,16 +44,12 @@ page = """
         <form class="panel" method="post"> <input class="panel" type="hidden" name="postid" value="{{post.key().id()}}"/> <input  type="submit" class="panelbutton" value="delete"/></form>
     </div>
     {% endfor %}
+    
+    Queried {{passed}} seconds ago
+
     </div>
 """
 template = Template(page);
-
-class Post(db.Model):     
-    subject = db.StringProperty(required = True)
-    content = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-    def toDict(self):
-        return {"content" : self.content.encode('utf-8'), "created" : (self.created.isoformat()), "last_modified" : (self.created.isoformat()), "subject" : self.subject.encode('utf-8')}
 
 class BlogPage(webapp2.RequestHandler):
     def write(self,c):
@@ -59,6 +57,7 @@ class BlogPage(webapp2.RequestHandler):
     def render(self, **params):
         params["blogpost"] = head.adr['blogpost'];
         params["blog"] = head.adr['blog'];
+        params["passed"] = post.seconds();
         self.response.headers['Content-Type'] = 'text/html'
         c = template.render(params)
         self.write(c)
@@ -67,13 +66,9 @@ class BlogPage(webapp2.RequestHandler):
         list = [post.toDict() for post in params["posts"]]
         self.response.write(json.dumps(list))
     def renderPosts(self):
-        posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC LIMIT 13")     
-        self.render(posts = posts)
-    def post(self):
-        pid = self.request.get("postid")
-        posts = db.GqlQuery("SELECT * FROM Post WHERE __key__ = KEY('Post',%s)"%pid)  
-        for post in posts:
-            post.delete()
+        self.render(posts = post.top())
+    def post(self): #delete button
+        post.delete(self.request.get("postid"))
         self.renderPosts()
     def get(self):
         self.renderPosts()
@@ -84,7 +79,7 @@ class BlogSinglePage(BlogPage):
     def get(self):
         adr = self.request.path.split('/')[-1].split('.')
         pid = adr[0]
-        posts = db.GqlQuery("SELECT * FROM Post WHERE __key__ = KEY('Post',%s)"%pid)     
+        posts = post.get(pid)  
         if(adr[-1] == "json"):
             self.renderJson(posts = posts)
         else:
@@ -94,11 +89,10 @@ class BlogPageJson(BlogPage):
     def render(self, **params):
         self.renderJson(**params)
 
-class BlogSinglePageJson(BlogSinglePage):
-    def render(self, **params):
-        self.renderJson(**params)
-
-   
+class BlogFlushPage(BlogPage):
+    def get(self):
+        post.flush();
+        self.redirect(head.adr['blog']);
 
 from blogpost import PostPage
 from signUp import SignUpPage
@@ -113,7 +107,7 @@ app = webapp2.WSGIApplication([
     (head.adr['blog']+"/login", SignInPage),
     (head.adr['blog']+"/logout", SignOutPage),
     (head.adr['blog']+"/welcome", WelcomePage),
+    (head.adr['blog']+"/flush", BlogFlushPage),
     (head.adr['blogpost'], PostPage),
-    (head.adr['blogpost']+".json", BlogSinglePageJson),
     (head.adr['blog']+'/.*', BlogSinglePage)
 ], debug=head.debug)
