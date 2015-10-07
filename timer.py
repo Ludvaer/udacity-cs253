@@ -74,7 +74,7 @@ class TimerPage(head.HeadPage):
     def get(self):                
         start = self.request.get("s")
         if not start:
-          start = "5";
+          start = "10";
         self.render(start = start)
 
 
