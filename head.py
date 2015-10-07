@@ -45,5 +45,18 @@ page = """
 # template = jinja_environment.get_template('index.html');
 template = Template(page);
 def fold(content,title = "", noHomeLink = False):
-    return template.render({"content":content, "title":title +" "+ projectName, "homeLink": "" if noHomeLink else homeLinkString})
+    return template.render({"content":content, "title":title +" | "+ projectName, "homeLink": "" if noHomeLink else homeLinkString})
+
+class HeadPage(webapp2.RequestHandler):
+  page = ""
+  title = "Empty"
+  template = None
+  noHomeLink = False
+  def render(self,**params):
+    if not self.template:
+        self.template = Template(self.page);
+    c = self.template.render(params)
+    self.response.headers['Content-Type'] = 'text/html'
+    self.response.write(fold(c,self.title,noHomeLink = self.noHomeLink))
+
     

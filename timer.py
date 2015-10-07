@@ -1,45 +1,82 @@
 import webapp2
 import head
 
+
 title = "Timer"
 
 page = """
-<h1 id = "countdown">10</h1>
- <audio id="audio" src="/static/beep-07.mp3" autostart="false" ></audio>
+<h1 id = "countdown"></h1>
+<form method="get">
+ <input type="button" value="reset" onclick="rset()">
+ <label>Set period (sec)</label>
+ <input type="number" name="s" id = "startTime" value="">
+ <input type="button" value="set" onclick="set()">
+ <input type="button" value="set+reset" onclick="forceset()">
+ <input type="submit" value="go">
+</form>
+
 <script>
-var startTime = 60;
+var sec = 1000
+var soundlong = 0.333
+var soundfreq = 666
+var startTime = {{start}};
 var sound = document.getElementById("audio");
 var countdown = document.getElementById("countdown");
-setInterval(f, 1000);
-var c = startTime;
-countdown.innerHTML = c;
+var startTimeInput = document.getElementById("startTime");
+var interval =  null;
+var audioContext = null; 
+rset();
 
 
 function f() {
-  c -= 1;  
-  if (c <= 0) { 
-    var audioContext = new AudioContext();
+  c -= 1; 
+  if (audioContext != undefined) {
+      audioContext.close()
+      audioContext = null
+  }
+  
+  if (c <= 0) {
+    audioContext = new AudioContext();
     var oscillator = audioContext.createOscillator();
-    oscillator.frequency.value = 666; 
+    oscillator.frequency.value = soundfreq; 
     oscillator.connect(audioContext.destination); 
     oscillator.start(0);
-    oscillator.stop(0.3);  
-    c = startTime;
+    oscillator.stop(soundlong);  
+    c = startTime;    
   } 
   countdown.innerHTML = c;
 }
-function stop() {
-  
+function set() {
+  startTime = parseInt(startTimeInput.value);
+}
+function rset() {
+  c = startTime;
+  countdown.innerHTML = c;
+  startTimeInput.setAttribute("value",c);
+  if (interval != undefined) {
+    clearInterval(interval);
+  }
+  interval = setInterval(f, sec);
+}
+function forceset() {
+  set();
+  rset();
 }
 
 </script>
 """
 
 
-class TimerPage(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write(head.fold(page,title,noHomeLink = True))
+class TimerPage(head.HeadPage):
+    page = page
+    noHomeLink = True
+    title = "Timer"
+    def get(self):                
+        start = self.request.get("s")
+        if not start:
+          start = "5";
+        self.render(start = start)
+
 
 from head import debug
 app = webapp2.WSGIApplication([    
